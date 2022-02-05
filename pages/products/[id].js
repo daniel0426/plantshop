@@ -31,6 +31,7 @@ export async function getStaticProps({params: {id}}){
 }
 
 const ProductPage = ({product}) => {
+   
   return (
     <Page title={product.title}>
       <div className='flex flex-col md:flex-row md:w-3/4 lg:w-1/2 md:mx-auto'>

@@ -1,15 +1,23 @@
+import { useRouter } from 'next/dist/client/router';
 import React, { useState } from 'react';
 import Button from '../components/Button';
 import Field from '../components/Field';
 import Input from '../components/Input';
 import Page from '../components/Page';
+import { useSignIn } from '../hooks/user';
 
 const SignInPage = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const handleSubmit = (e)=> {
-        e.preventDefault();
-        console.log('should send to API')
+    const router = useRouter();
+    const {signIn, signInError, signInLoading} = useSignIn()
+    
+    const handleSubmit = async (e)=> {
+            e.preventDefault();
+          const valid =  await signIn(email, password)
+          if(valid){
+              router.push('/')
+          }
     }
 
   return (
@@ -21,9 +29,12 @@ const SignInPage = () => {
             <Field label="Password" >
                 <Input type="password" value={password} required onChange= {(e)=> setPassword(e.target.value)} />
             </Field>
-            <Button type="submit" > 
+            {signInError && <p className='text-sm text-red-700 text-center' >Invalid credentials</p>}
+            {signInLoading ? 
+            <p className='text-center text-blue-400'>Loading ...</p> 
+            : <Button type="submit" > 
                 Sign in
-            </Button>
+            </Button>}
         </form>
       </Page> 
   )
